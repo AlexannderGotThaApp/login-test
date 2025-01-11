@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio aspirinatore</title>
+    <title>Likely lies...</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,6 +57,20 @@
         .logout-container button {
             background: #ff4d4d;
         }
+        #logout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 15px;
+            background: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #logout-button:hover {
+            background: #cc0000;
+        }
     </style>
 </head>
 <body>
@@ -74,7 +88,7 @@
             </p>
         </div>
         <div id="logout-container" class="logout-container">
-            <h2>Welcome, <span id="current-user">. Thanks for using my login test</span>!</h2>
+            <h2>Mind an cup o' tea?</h2>
             <button id="logout-button">Logout</button>
         </div>
     </div>
@@ -87,7 +101,6 @@
         const form = document.getElementById('auth-form');
         const logoutContainer = document.getElementById('logout-container');
         const authContainer = document.getElementById('auth-container');
-        const currentUserSpan = document.getElementById('current-user');
         const logoutButton = document.getElementById('logout-button');
 
         let isLogin = false;
@@ -116,6 +129,7 @@
                     const token = generateToken();
                     localStorage.setItem(`${username}_token`, token);
                     setCookie('authToken', token); // Set token in cookie
+                    console.log(`Hello, ${username}`); // Print username to console
                     showLogout(username);
                     message.style.color = 'green';
                     message.textContent = 'Login successful!';
@@ -146,7 +160,7 @@
 
         // Generate a secure token
         function generateToken() {
-            return Math.random().toString(36).substring(2) + Date.now().toString(36);
+            return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2) + Date.now().toString(36);
         }
 
         // Set cookie helper function
@@ -157,16 +171,8 @@
             document.cookie = `${name}=${value}; ${expires}; path=/`;
         }
 
-        // Get cookie helper function
-        function getCookie(name) {
-            const cookies = document.cookie.split('; ');
-            const cookie = cookies.find(row => row.startsWith(`${name}=`));
-            return cookie ? cookie.split('=')[1] : null;
-        }
-
         // Show logout container
         function showLogout(username) {
-            currentUserSpan.textContent = username;
             authContainer.style.display = 'none';
             logoutContainer.style.display = 'block';
         }
@@ -190,6 +196,13 @@
             }
         } else {
             showAuth();
+        }
+
+        // Get cookie helper function
+        function getCookie(name) {
+            const cookies = document.cookie.split('; ');
+            const cookie = cookies.find(row => row.startsWith(`${name}=`));
+            return cookie ? cookie.split('=')[1] : null;
         }
     </script>
 </body>
