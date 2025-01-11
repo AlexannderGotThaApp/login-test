@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio aspirin</title>
+    <title>Studio aspirinatore</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -74,7 +74,7 @@
             </p>
         </div>
         <div id="logout-container" class="logout-container">
-            <h2>Welcome, <span id="current-user"></span>!</h2>
+            <h2>Welcome, <span id="current-user">. Thanks for using my login test</span>!</h2>
             <button id="logout-button">Logout</button>
         </div>
     </div>
@@ -113,7 +113,9 @@
                 // Login process
                 const storedPassword = localStorage.getItem(username);
                 if (storedPassword && storedPassword === password) {
-                    setCookie('loggedInUser', username, 1); // Set cookie for 1 day
+                    const token = generateToken();
+                    localStorage.setItem(`${username}_token`, token);
+                    setCookie('authToken', token); // Set token in cookie
                     showLogout(username);
                     message.style.color = 'green';
                     message.textContent = 'Login successful!';
@@ -138,14 +140,19 @@
 
         // Logout process
         logoutButton.addEventListener('click', () => {
-            setCookie('loggedInUser', '', -1); // Clear the cookie
+            setCookie('authToken', '', -1); // Clear the cookie
             showAuth();
         });
 
+        // Generate a secure token
+        function generateToken() {
+            return Math.random().toString(36).substring(2) + Date.now().toString(36);
+        }
+
         // Set cookie helper function
-        function setCookie(name, value, days) {
+        function setCookie(name, value) {
             const date = new Date();
-            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            date.setFullYear(date.getFullYear() + 100); // Set expiration 100 years in the future
             const expires = `expires=${date.toUTCString()}`;
             document.cookie = `${name}=${value}; ${expires}; path=/`;
         }
@@ -171,9 +178,16 @@
         }
 
         // Check if user is already logged in
-        const loggedInUser = getCookie('loggedInUser');
-        if (loggedInUser) {
-            showLogout(loggedInUser);
+        const token = getCookie('authToken');
+        if (token) {
+            // Validate the token
+            for (const key of Object.keys(localStorage)) {
+                if (key.endsWith('_token') && localStorage.getItem(key) === token) {
+                    const username = key.replace('_token', '');
+                    showLogout(username);
+                    break;
+                }
+            }
         } else {
             showAuth();
         }
