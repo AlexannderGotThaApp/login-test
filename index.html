@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Likely lies...</title>
+    <title>Studio Aspirinatore</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,7 +88,7 @@
             </p>
         </div>
         <div id="logout-container" class="logout-container">
-            <h2>Mind an cup o' tea?</h2>
+            <h2 id="welcome-message">Mind an cup o' tea?</h2>
             <button id="logout-button">Logout</button>
         </div>
     </div>
@@ -101,6 +101,7 @@
         const form = document.getElementById('auth-form');
         const logoutContainer = document.getElementById('logout-container');
         const authContainer = document.getElementById('auth-container');
+        const welcomeMessage = document.getElementById('welcome-message');
         const logoutButton = document.getElementById('logout-button');
 
         let isLogin = false;
@@ -173,6 +174,7 @@
 
         // Show logout container
         function showLogout(username) {
+            welcomeMessage.textContent = `Mind an cup o' tea, ${username}?`;
             authContainer.style.display = 'none';
             logoutContainer.style.display = 'block';
         }
